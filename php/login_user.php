@@ -16,7 +16,7 @@ if($result->num_rows>0){
 	while ($row = $result->fetch_assoc()){
 		$userlist = array();
         $userlist['id'] = $row['user_id'];
-		$userlist['email'] = $row['user_email'];
+	$userlist['email'] = $row['user_email'];
         $userlist['name'] = $row['user_name'];
         $userlist['phone'] = $row['user_phone'];
         $userlist['address'] = $row['user_address'];
