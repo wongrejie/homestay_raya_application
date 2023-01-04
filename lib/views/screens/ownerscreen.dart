@@ -5,17 +5,17 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
-
 import '../../config.dart';
+import '../../models/homestay.dart';
 import '../../models/user.dart';
-
+import '../shared/enterExitRoute.dart';
 import '../shared/mainmenu.dart';
 import 'detailscreen.dart';
-import 'homestayscreen.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:intl/intl.dart';
-
+import 'loginscreen.dart';
 import 'newhomestay.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 class OwnerScreen extends StatefulWidget {
   final User user;
@@ -26,9 +26,8 @@ class OwnerScreen extends StatefulWidget {
 }
 
 class _OwnerScreenState extends State<OwnerScreen> {
-  var _lat, _lng;
   late Position _position;
-  List<Product> productList = <Product>[];
+  List<Homestay> homestayList = <Homestay>[];
   String titlecenter = "Loading...";
   var placemarks;
   final df = DateFormat('dd/MM/yyyy hh:mm a');
@@ -38,13 +37,13 @@ class _OwnerScreenState extends State<OwnerScreen> {
   @override
   void initState() {
     super.initState();
-    // _loadHomestay();
+
+    _loadHomestay();
   }
 
   @override
   void dispose() {
-    productList = [];
-    print("dispose");
+    homestayList = [];
     super.dispose();
   }
 
@@ -62,33 +61,68 @@ class _OwnerScreenState extends State<OwnerScreen> {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
-          appBar: AppBar(title: const Text("Seller"), actions: [
-            PopupMenuButton(
-                // add icon, by default "3 dot" icon
-                // icon: Icon(Icons.book)
-                itemBuilder: (context) {
+          floatingActionButton: SpeedDial(
+            animatedIcon: AnimatedIcons.menu_close,
+            children: [
+              SpeedDialChild(
+                  child: const Icon(Icons.add),
+                  label: "Register new homestay",
+                  labelStyle: const TextStyle(),
+                  onTap: _gotoNewHomestay),
+            ],
+          ),
+          appBar: AppBar(title: const Text("Homestay Owner"), actions: [
+            PopupMenuButton(itemBuilder: (context) {
               return [
                 const PopupMenuItem<int>(
                   value: 0,
-                  child: Text("Add new homestay"),
-                ),
-                const PopupMenuItem<int>(
-                  value: 1,
-                  child: Text("My Booking"),
+                  child: Text("Log Out"),
                 ),
               ];
             }, onSelected: (value) {
               if (value == 0) {
-                _gotoNewHomestay();
-                print("My account menu is selected.");
-              } else if (value == 1) {
-                print("Settings menu is selected.");
-              } else if (value == 2) {
-                print("Logout menu is selected.");
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      shape: const RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(20.0))),
+                      title: const Text(
+                        "Log out",
+                        style: TextStyle(),
+                      ),
+                      content: const Text(
+                        "Are you sure?",
+                        style: TextStyle(),
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          child: const Text("Yes"),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                EnterExitRoute(
+                                    exitPage: OwnerScreen(user: widget.user),
+                                    enterPage: LoginScreen(user: widget.user)));
+                          },
+                        ),
+                        TextButton(
+                          child: const Text(
+                            "No",
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
               }
             }),
           ]),
-          body: productList.isEmpty
+          body: homestayList.isEmpty
               ? Center(
                   child: Text(titlecenter,
                       style: const TextStyle(
@@ -98,7 +132,7 @@ class _OwnerScreenState extends State<OwnerScreen> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                          "Your current products/services (${productList.length} found)"),
+                          "Your current homestays (${homestayList.length} found)"),
                     ),
                     const SizedBox(
                       height: 8,
@@ -106,7 +140,7 @@ class _OwnerScreenState extends State<OwnerScreen> {
                     Expanded(
                       child: GridView.count(
                         crossAxisCount: rowcount,
-                        children: List.generate(productList.length, (index) {
+                        children: List.generate(homestayList.length, (index) {
                           return Card(
                             elevation: 8,
                             child: InkWell(
@@ -121,7 +155,7 @@ class _OwnerScreenState extends State<OwnerScreen> {
                                     width: resWidth / 4,
                                     fit: BoxFit.cover,
                                     imageUrl:
-                                        "${Config.SERVER}/assets/productimages/${productList[index].productId}.png",
+                                        "${Config.SERVER}/assets/homestayImages/${homestayList[index].homestayId}.png",
                                     placeholder: (context, url) =>
                                         const LinearProgressIndicator(),
                                     errorWidget: (context, url, error) =>
@@ -129,15 +163,15 @@ class _OwnerScreenState extends State<OwnerScreen> {
                                   ),
                                 ),
                                 Flexible(
-                                    flex: 4,
+                                    flex: 6,
                                     child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
+                                      padding: const EdgeInsets.all(6.0),
                                       child: Column(
                                         children: [
                                           Text(
                                             truncateString(
-                                                productList[index]
-                                                    .productName
+                                                homestayList[index]
+                                                    .homestayName
                                                     .toString(),
                                                 15),
                                             style: const TextStyle(
@@ -145,10 +179,10 @@ class _OwnerScreenState extends State<OwnerScreen> {
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Text(
-                                              "RM ${productList[index].productPrice}"),
+                                              "RM ${homestayList[index].homestayPrice}"),
                                           Text(df.format(DateTime.parse(
-                                              productList[index]
-                                                  .productDate
+                                              homestayList[index]
+                                                  .homestayDate
                                                   .toString()))),
                                         ],
                                       ),
@@ -200,7 +234,7 @@ class _OwnerScreenState extends State<OwnerScreen> {
                   position: _position,
                   user: widget.user,
                   placemarks: placemarks)));
-      // _loadHomestay();
+      _loadHomestay();
     } else {
       Fluttertoast.showToast(
           msg: "Please allow the app to access the location",
@@ -261,54 +295,54 @@ class _OwnerScreenState extends State<OwnerScreen> {
     return true;
   }
 
-  // void _loadHomestay() {
-  //   if (widget.user.id == "0") {
-  //     //check if the user is registered or not
-  //     Fluttertoast.showToast(
-  //         msg: "Please register an account first", //Show toast
-  //         toastLength: Toast.LENGTH_SHORT,
-  //         gravity: ToastGravity.BOTTOM,
-  //         timeInSecForIosWeb: 1,
-  //         fontSize: 14.0);
-  //     return; //exit method if true
-  //   }
-  //   //if registered user, continue get request
-  //   http
-  //       .get(
-  //     Uri.parse(
-  //         "${Config.SERVER}/php/loadsellerproducts.php?userid=${widget.user.id}"),
-  //   )
-  //       .then((response) {
-  //     // wait for response from the request
-  //     if (response.statusCode == 200) {
-  //       //if statuscode OK
-  //       var jsondata =
-  //           jsonDecode(response.body); //decode response body to jsondata array
-  //       if (jsondata['status'] == 'success') {
-  //         //check if status data array is success
-  //         var extractdata = jsondata['data']; //extract data from jsondata array
-  //         if (extractdata['products'] != null) {
-  //           //check if  array object is not null
-  //           productList = <Product>[]; //complete the array object definition
-  //           extractdata['products'].forEach((v) {
-  //             //traverse products array list and add to the list object array productList
-  //             productList.add(Product.fromJson(
-  //                 v)); //add each product array to the list object array productList
-  //           });
-  //           titlecenter = "Found";
-  //         } else {
-  //           titlecenter =
-  //               "No Product Available"; //if no data returned show title center
-  //           productList.clear();
-  //         }
-  //       }
-  //     } else {
-  //       titlecenter = "No Product Available"; //status code other than 200
-  //       productList.clear(); //clear productList array
-  //     }
-  //     setState(() {}); //refresh UI
-  //   });
-  // }
+  void _loadHomestay() {
+    if (widget.user.id == "0") {
+      //check if the user is registered or not
+      Fluttertoast.showToast(
+          msg: "Please register an account first", //Show toast
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          fontSize: 14.0);
+      return; //exit method if true
+    }
+    //if registered user, continue get request
+    http
+        .get(
+      Uri.parse(
+          "${Config.SERVER}/php/load_ownerhomestay.php?userid=${widget.user.id}"),
+    )
+        .then((response) {
+      // wait for response from the request
+      if (response.statusCode == 200) {
+        //if statuscode OK
+        var jsondata =
+            jsonDecode(response.body); //decode response body to jsondata array
+        if (jsondata['status'] == 'success') {
+          //check if status data array is success
+          var extractdata = jsondata['data']; //extract data from jsondata array
+          if (extractdata['homestays'] != null) {
+            //check if  array object is not null
+            homestayList = <Homestay>[]; //complete the array object definition
+            extractdata['homestays'].forEach((v) {
+              //traverse homestays array list and add to the list object array homestayList
+              homestayList.add(Homestay.fromJson(
+                  v)); //add each product array to the list object array homestayList
+            });
+            titlecenter = "Found";
+          } else {
+            titlecenter =
+                "No homestay Available"; //if no data returned show title center
+            homestayList.clear();
+          }
+        }
+      } else {
+        titlecenter = "No homestay Available"; //status code other than 200
+        homestayList.clear(); //clear productList array
+      }
+      setState(() {}); //refresh UI
+    });
+  }
 
   void _showDetails() {
     Navigator.push(context,

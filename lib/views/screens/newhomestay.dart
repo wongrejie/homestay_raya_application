@@ -30,10 +30,10 @@ class _NewHomestayScreenState extends State<NewHomestayScreen> {
       TextEditingController();
   final TextEditingController _hsdescEditingController =
       TextEditingController();
+  final TextEditingController _hsaddressEditingController =
+      TextEditingController();
   final TextEditingController _hspriceEditingController =
       TextEditingController();
-  final TextEditingController _hsdelEditingController = TextEditingController();
-  final TextEditingController _hsqtyEditingController = TextEditingController();
   final TextEditingController _hsstateEditingController =
       TextEditingController();
   final TextEditingController _hslocalEditingController =
@@ -53,7 +53,7 @@ class _NewHomestayScreenState extends State<NewHomestayScreen> {
   }
 
   File? _image;
-  var pathAsset = "assets/images/camera.png";
+  var pathAsset = "assets/images/add_image.png";
   bool _isChecked = false;
   @override
   Widget build(BuildContext context) {
@@ -121,6 +121,24 @@ class _NewHomestayScreenState extends State<NewHomestayScreen> {
                           labelStyle: TextStyle(),
                           icon: Icon(
                             Icons.person,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(width: 2.0),
+                          ))),
+                  TextFormField(
+                      textInputAction: TextInputAction.next,
+                      controller: _hsaddressEditingController,
+                      validator: (val) => val!.isEmpty || (val.length < 10)
+                          ? "Homestay address must be longer than 10"
+                          : null,
+                      maxLines: 4,
+                      keyboardType: TextInputType.text,
+                      decoration: const InputDecoration(
+                          labelText: 'Homestay Address',
+                          alignLabelWithHint: true,
+                          labelStyle: TextStyle(),
+                          icon: Icon(
+                            Icons.add_location,
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(width: 2.0),
@@ -370,19 +388,10 @@ class _NewHomestayScreenState extends State<NewHomestayScreen> {
     }
   }
 
-  // _getAddress() async {
-  //   List<Placemark> placemarks = await placemarkFromCoordinates(
-  //       widget.position.latitude, widget.position.longitude);
-  //   setState(() {
-  //     _prstateEditingController.text =
-  //         placemarks[0].administrativeArea.toString();
-  //     _prlocalEditingController.text = placemarks[0].locality.toString();
-  //   });
-  // }
-
   void insertHomestay() {
     String hsname = _hsnameEditingController.text;
     String hsdesc = _hsdescEditingController.text;
+    String hsaddress = _hsaddressEditingController.text;
     String hsprice = _hspriceEditingController.text;
     String state = _hsstateEditingController.text;
     String local = _hslocalEditingController.text;
@@ -390,9 +399,10 @@ class _NewHomestayScreenState extends State<NewHomestayScreen> {
 
     http.post(Uri.parse("${Config.SERVER}/php/insert_homestay.php"), body: {
       "userid": widget.user.id,
-      "prname": hsname,
-      "prdesc": hsdesc,
-      "prprice": hsprice,
+      "hsname": hsname,
+      "hsdesc": hsdesc,
+      "hsaddress": hsaddress,
+      "hsprice": hsprice,
       "state": state,
       "local": local,
       "lat": _lat,
