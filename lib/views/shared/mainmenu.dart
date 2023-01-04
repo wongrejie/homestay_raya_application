@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:homestay_raya_application/views/screens/loginscreen.dart';
+import 'package:homestay_raya_application/views/screens/ownerscreen.dart';
 import '../../models/user.dart';
 import '../screens/mainscreen.dart';
 import '../screens/profilescreen.dart';
@@ -49,6 +50,19 @@ class _MainMenuWidgetState extends State<MainMenuWidget> {
                   EnterExitRoute(
                       exitPage: MainScreen(user: widget.user),
                       enterPage: LoginScreen(user: widget.user)));
+            },
+          ),
+          ListTile(
+            title: const Text('Owner'),
+            onTap: () {
+              // Navigator.pop(context);
+              Navigator.push(
+                  context,
+                  EnterExitRoute(
+                      exitPage: MainScreen(user: widget.user),
+                      enterPage: OwnerScreen(
+                        user: widget.user,
+                      )));
             },
           ),
           ListTile(
