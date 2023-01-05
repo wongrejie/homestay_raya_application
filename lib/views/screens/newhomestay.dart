@@ -445,8 +445,8 @@ class _NewHomestayScreenState extends State<NewHomestayScreen> {
           child: GestureDetector(
             onTap: _selectImageDialog,
             child: Container(
-              height: 200,
-              width: 200,
+              height: 250,
+              width: 250,
               decoration: BoxDecoration(
                   image: DecorationImage(
                 image: imageList.isNotEmpty
