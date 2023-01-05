@@ -155,7 +155,7 @@ class _OwnerScreenState extends State<OwnerScreen> {
                                     width: resWidth / 4,
                                     fit: BoxFit.cover,
                                     imageUrl:
-                                        "${Config.SERVER}/assets/homestayImages/${homestayList[index].homestayId}.png",
+                                        "${Config.SERVER}/assets/homestayImages/${homestayList[index].homestayId}.1.png",
                                     placeholder: (context, url) =>
                                         const LinearProgressIndicator(),
                                     errorWidget: (context, url, error) =>
