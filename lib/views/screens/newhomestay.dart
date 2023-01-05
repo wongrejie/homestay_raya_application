@@ -313,11 +313,11 @@ class _NewHomestayScreenState extends State<NewHomestayScreen> {
                 IconButton(
                     iconSize: 64,
                     onPressed: _onCamera,
-                    icon: const Icon(Icons.camera)),
+                    icon: const Icon(Icons.camera_alt)),
                 IconButton(
                     iconSize: 64,
                     onPressed: _onGallery,
-                    icon: const Icon(Icons.browse_gallery_sharp)),
+                    icon: const Icon(Icons.upload)),
               ],
             ));
       },
@@ -469,8 +469,8 @@ class _NewHomestayScreenState extends State<NewHomestayScreen> {
           child: GestureDetector(
             onTap: _selectImageDialog,
             child: Container(
-              height: 200,
-              width: 200,
+              height: 250,
+              width: 250,
               decoration: BoxDecoration(
                   image: DecorationImage(
                 image: imageList.length > 1
@@ -493,8 +493,8 @@ class _NewHomestayScreenState extends State<NewHomestayScreen> {
           child: GestureDetector(
             onTap: _selectImageDialog,
             child: Container(
-              height: 200,
-              width: 200,
+              height: 250,
+              width: 250,
               decoration: BoxDecoration(
                   image: DecorationImage(
                 image: imageList.length > 2
