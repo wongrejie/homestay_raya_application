@@ -144,7 +144,12 @@ class _OwnerScreenState extends State<OwnerScreen> {
                           return Card(
                             elevation: 8,
                             child: InkWell(
-                              onTap: _showDetails,
+                              onTap: () {
+                                _showDetails(index);
+                              },
+                              onLongPress: () {
+                                _deleteDialog(index);
+                              },
                               child: Column(children: [
                                 const SizedBox(
                                   height: 6,
@@ -344,8 +349,84 @@ class _OwnerScreenState extends State<OwnerScreen> {
     });
   }
 
-  void _showDetails() {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (content) => const DetailsScreen()));
+  Future<void> _showDetails(int index) async {
+    Homestay homestay = Homestay.fromJson(homestayList[index].toJson());
+
+    await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (content) => DetailsScreen(
+                  homestay: homestay,
+                  user: widget.user,
+                )));
+    _loadHomestay();
+  }
+
+  _deleteDialog(int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          title: Text(
+            "Delete ${truncateString(homestayList[index].homestayName.toString(), 15)}",
+            style: const TextStyle(),
+          ),
+          content: const Text("Are you sure?", style: TextStyle()),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                "Yes",
+                style: TextStyle(),
+              ),
+              onPressed: () async {
+                Navigator.of(context).pop();
+                _deleteHomestay(index);
+              },
+            ),
+            TextButton(
+              child: const Text(
+                "No",
+                style: TextStyle(),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _deleteHomestay(index) {
+    try {
+      http.post(Uri.parse("${Config.SERVER}/php/delete_homestay.php"), body: {
+        "homestayid": homestayList[index].homestayId,
+      }).then((response) {
+        var data = jsonDecode(response.body);
+        if (response.statusCode == 200 && data['status'] == "success") {
+          Fluttertoast.showToast(
+              msg: "Success",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              fontSize: 14.0);
+          _loadHomestay();
+          return;
+        } else {
+          Fluttertoast.showToast(
+              msg: "Failed",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              fontSize: 14.0);
+          return;
+        }
+      });
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }

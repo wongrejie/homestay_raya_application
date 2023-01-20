@@ -20,7 +20,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  bool _passwordVisible = true;
+  final bool _passwordVisible = true;
   final TextEditingController _emailEditingController = TextEditingController();
   final TextEditingController _passEditingController = TextEditingController();
 
@@ -54,6 +54,9 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           children: [
             Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
                 elevation: 8,
                 margin: const EdgeInsets.all(8),
                 child: Container(
