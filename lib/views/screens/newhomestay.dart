@@ -7,7 +7,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:http/http.dart' as http;
-import '../../config.dart';
+import '../../ServerConfig.dart';
 import '../../models/user.dart';
 
 class NewHomestayScreen extends StatefulWidget {
@@ -399,20 +399,21 @@ class _NewHomestayScreenState extends State<NewHomestayScreen> {
     String base64Image2 = base64Encode(imageList[1].readAsBytesSync());
     String base64Image3 = base64Encode(imageList[2].readAsBytesSync());
 
-    http.post(Uri.parse("${Config.SERVER}/php/insert_homestay.php"), body: {
-      "userid": widget.user.id,
-      "hsname": hsname,
-      "hsdesc": hsdesc,
-      "hsaddress": hsaddress,
-      "hsprice": hsprice,
-      "state": state,
-      "local": local,
-      "lat": _lat,
-      "lon": _lng,
-      "image1": base64Image1,
-      "image2": base64Image2,
-      "image3": base64Image3,
-    }).then((response) {
+    http.post(Uri.parse("${ServerConfig.SERVER}/php/insert_homestay.php"),
+        body: {
+          "userid": widget.user.id,
+          "hsname": hsname,
+          "hsdesc": hsdesc,
+          "hsaddress": hsaddress,
+          "hsprice": hsprice,
+          "state": state,
+          "local": local,
+          "lat": _lat,
+          "lon": _lng,
+          "image1": base64Image1,
+          "image2": base64Image2,
+          "image3": base64Image3,
+        }).then((response) {
       var data = jsonDecode(response.body);
       if (response.statusCode == 200 && data['status'] == "success") {
         Fluttertoast.showToast(

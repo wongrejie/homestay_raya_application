@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
-import '../../config.dart';
+import '../../ServerConfig.dart';
 import '../../models/homestay.dart';
 import '../../models/user.dart';
 
@@ -76,7 +76,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     width: resWidth,
                     fit: BoxFit.cover,
                     imageUrl:
-                        "${Config.SERVER}/assets/homestayimages/${widget.homestay.homestayId}.1.png",
+                        "${ServerConfig.SERVER}/assets/homestayimages/${widget.homestay.homestayId}.1.png",
                     placeholder: (context, url) =>
                         const LinearProgressIndicator(),
                     errorWidget: (context, url, error) =>
@@ -277,14 +277,15 @@ class _DetailsScreenState extends State<DetailsScreen> {
     String hsaddress = _hsaddressEditingController.text;
     String hsprice = _hspriceEditingController.text;
 
-    http.post(Uri.parse("${Config.SERVER}/php/update_homestay.php"), body: {
-      "homestayid": widget.homestay.homestayId,
-      "userid": widget.user.id,
-      "hsname": hsname,
-      "hsdesc": hsdesc,
-      "hsaddress": hsaddress,
-      "hsprice": hsprice,
-    }).then((response) {
+    http.post(Uri.parse("${ServerConfig.SERVER}/php/update_homestay.php"),
+        body: {
+          "homestayid": widget.homestay.homestayId,
+          "userid": widget.user.id,
+          "hsname": hsname,
+          "hsdesc": hsdesc,
+          "hsaddress": hsaddress,
+          "hsprice": hsprice,
+        }).then((response) {
       var data = jsonDecode(response.body);
       if (response.statusCode == 200 && data['status'] == "success") {
         Fluttertoast.showToast(

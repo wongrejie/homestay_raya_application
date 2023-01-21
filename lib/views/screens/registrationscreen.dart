@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:homestay_raya_application/config.dart';
+import 'package:homestay_raya_application/ServerConfig.dart';
 import 'package:ndialog/ndialog.dart';
 
 class Registrationscreen extends StatefulWidget {
@@ -325,7 +325,7 @@ class _RegistrationscreenState extends State<Registrationscreen> {
         message: const Text("Registration in progress.."),
         title: const Text("Registering account..."));
     progressDialog.show();
-    http.post(Uri.parse("${Config.SERVER}/php/register_user.php"), body: {
+    http.post(Uri.parse("${ServerConfig.SERVER}/php/register_user.php"), body: {
       "name": name,
       "email": email,
       "phone": phone,

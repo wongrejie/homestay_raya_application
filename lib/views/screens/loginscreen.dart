@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:ndialog/ndialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../config.dart';
+import '../../ServerConfig.dart';
 import '../../models/user.dart';
 import 'mainscreen.dart';
 import 'registrationscreen.dart';
@@ -171,7 +171,7 @@ class _LoginScreenState extends State<LoginScreen> {
     progressDialog.show();
     String _email = _emailEditingController.text;
     String _pass = _passEditingController.text;
-    http.post(Uri.parse("${Config.SERVER}/php/login_user.php"),
+    http.post(Uri.parse("${ServerConfig.SERVER}/php/login_user.php"),
         body: {"email": _email, "password": _pass}).then((response) {
       print(response.body);
       if (response.statusCode == 200) {

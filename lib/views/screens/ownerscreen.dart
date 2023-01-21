@@ -5,7 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
-import '../../config.dart';
+import '../../ServerConfig.dart';
 import '../../models/homestay.dart';
 import '../../models/user.dart';
 import '../shared/enterExitRoute.dart';
@@ -160,7 +160,7 @@ class _OwnerScreenState extends State<OwnerScreen> {
                                     width: resWidth / 4,
                                     fit: BoxFit.cover,
                                     imageUrl:
-                                        "${Config.SERVER}/assets/homestayImages/${homestayList[index].homestayId}.1.png",
+                                        "${ServerConfig.SERVER}/assets/homestayImages/${homestayList[index].homestayId}.1.png",
                                     placeholder: (context, url) =>
                                         const LinearProgressIndicator(),
                                     errorWidget: (context, url, error) =>
@@ -315,7 +315,7 @@ class _OwnerScreenState extends State<OwnerScreen> {
     http
         .get(
       Uri.parse(
-          "${Config.SERVER}/php/load_ownerhomestay.php?userid=${widget.user.id}"),
+          "${ServerConfig.SERVER}/php/load_ownerhomestay.php?userid=${widget.user.id}"),
     )
         .then((response) {
       // wait for response from the request
@@ -402,9 +402,10 @@ class _OwnerScreenState extends State<OwnerScreen> {
 
   void _deleteHomestay(index) {
     try {
-      http.post(Uri.parse("${Config.SERVER}/php/delete_homestay.php"), body: {
-        "homestayid": homestayList[index].homestayId,
-      }).then((response) {
+      http.post(Uri.parse("${ServerConfig.SERVER}/php/delete_homestay.php"),
+          body: {
+            "homestayid": homestayList[index].homestayId,
+          }).then((response) {
         var data = jsonDecode(response.body);
         if (response.statusCode == 200 && data['status'] == "success") {
           Fluttertoast.showToast(
