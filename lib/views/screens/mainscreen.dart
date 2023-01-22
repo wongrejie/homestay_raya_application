@@ -12,6 +12,8 @@ import '../../models/user.dart';
 import '../shared/mainmenu.dart';
 import 'package:http/http.dart' as http;
 
+import 'clientdetailscreen.dart';
+
 class MainScreen extends StatefulWidget {
   final User user;
   const MainScreen({super.key, required this.user});
@@ -156,7 +158,7 @@ class _MainScreenState extends State<MainScreen> {
                           //build the list for textbutton with scroll
                           if ((curpage - 1) == index) {
                             //set current page number active
-                            color = Colors.red;
+                            color = Colors.cyanAccent;
                           } else {
                             color = Colors.black;
                           }
@@ -252,7 +254,6 @@ class _MainScreenState extends State<MainScreen> {
     }
     Homestay homestay = Homestay.fromJson(homestayList[index].toJson());
     loadSingleOwner(index);
-    //todo update seller object with empty object.
     ProgressDialog progressDialog = ProgressDialog(
       context,
       blur: 5,
@@ -261,18 +262,17 @@ class _MainScreenState extends State<MainScreen> {
     );
     progressDialog.show();
     Timer(const Duration(seconds: 1), () {
-      // if (seller != null) {
-      //   progressDialog.dismiss();
-      //   Navigator.push(
-      //       context,
-      //       MaterialPageRoute(
-      //           builder: (content) => ClientHomestayDetails(
-      //                 user: widget.user,
-      //                 homestay: homestay,
-      //                 seller: seller,
-      //               ))
-      //               );
-      // }
+      if (owner != null) {
+        progressDialog.dismiss();
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (content) => ClientHomestayDetails(
+                      user: widget.user,
+                      homestay: homestay,
+                      owner: owner,
+                    )));
+      }
       progressDialog.dismiss();
     });
   }
