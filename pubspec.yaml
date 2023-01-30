@@ -50,6 +50,7 @@ dependencies:
   flutter_speed_dial: ^6.2.0
   google_maps_flutter: ^2.2.3
   url_launcher: ^6.1.8
+  flutter_cache_manager: ^3.3.0
   
   
 dev_dependencies:

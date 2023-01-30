@@ -202,7 +202,8 @@ class _LoginScreenState extends State<LoginScreen> {
         name: "Unknown",
         address: "na",
         phone: "0123456789",
-        regdate: "0");
+        regdate: "0",
+        credit: "0");
     Navigator.push(
         context,
         MaterialPageRoute(

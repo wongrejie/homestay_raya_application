@@ -243,15 +243,6 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   _showDetails(int index) async {
-    if (widget.user.id == "0") {
-      Fluttertoast.showToast(
-          msg: "Please register an account",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          fontSize: 14.0);
-      return;
-    }
     Homestay homestay = Homestay.fromJson(homestayList[index].toJson());
     loadSingleOwner(index);
     ProgressDialog progressDialog = ProgressDialog(
@@ -287,7 +278,7 @@ class _MainScreenState extends State<MainScreen> {
             builder: (context, StateSetter setState) {
               return AlertDialog(
                 title: const Text(
-                  "Search ",
+                  "Search Homestay ",
                 ),
                 content: SizedBox(
                   //height: screenHeight / 4,
@@ -297,7 +288,7 @@ class _MainScreenState extends State<MainScreen> {
                       TextField(
                         controller: searchController,
                         decoration: InputDecoration(
-                            labelText: 'Search',
+                            labelText: 'Homestay Name',
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(5.0))),
                       ),

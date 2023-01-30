@@ -14,6 +14,7 @@ class ClientHomestayDetails extends StatefulWidget {
   final Homestay homestay;
   final User user;
   final User owner;
+
   const ClientHomestayDetails(
       {super.key,
       required this.homestay,
@@ -26,10 +27,15 @@ class ClientHomestayDetails extends StatefulWidget {
 
 class _ClientHomestayDetailsState extends State<ClientHomestayDetails> {
   late double screenHeight, screenWidth, resWidth;
-
+  bool isDisable = false;
   @override
   void initState() {
     super.initState();
+    if (widget.user.id == "0") {
+      isDisable = true;
+    } else {
+      isDisable = false;
+    }
   }
 
   @override
@@ -162,19 +168,19 @@ class _ClientHomestayDetailsState extends State<ClientHomestayDetails> {
                   children: [
                     IconButton(
                         iconSize: 32,
-                        onPressed: _makePhoneCall,
+                        onPressed: isDisable ? null : _makePhoneCall,
                         icon: const Icon(Icons.call)),
                     IconButton(
                         iconSize: 32,
-                        onPressed: _makeSmS,
+                        onPressed: isDisable ? null : _makeSmS,
                         icon: const Icon(Icons.message)),
                     IconButton(
                         iconSize: 32,
-                        onPressed: openwhatsapp,
+                        onPressed: isDisable ? null : openwhatsapp,
                         icon: const Icon(Icons.whatsapp)),
                     IconButton(
                         iconSize: 32,
-                        onPressed: _onRoute,
+                        onPressed: isDisable ? null : _onRoute,
                         icon: const Icon(Icons.map)),
                     const IconButton(
                         iconSize: 32,

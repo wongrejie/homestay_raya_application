@@ -24,7 +24,7 @@ class DetailsScreen extends StatefulWidget {
 
 class _DetailsScreenState extends State<DetailsScreen> {
   var pathAsset = "assets/images/camera.png";
-
+  bool isDisable = false;
   final TextEditingController _hsnameEditingController =
       TextEditingController();
   final TextEditingController _hsdescEditingController =
@@ -45,6 +45,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
   @override
   void initState() {
     super.initState();
+    if (widget.user.id == "0") {
+      isDisable = true;
+    } else {
+      isDisable = false;
+    }
+
     _hsnameEditingController.text = widget.homestay.homestayName.toString();
     _hsdescEditingController.text = widget.homestay.homestayDesc.toString();
     _hsaddressEditingController.text =
