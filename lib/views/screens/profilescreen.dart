@@ -110,11 +110,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     const Icon(Icons.phone),
                                     Text(widget.user.phone.toString()),
                                   ]),
-                                  TableRow(children: [
-                                    const Icon(Icons.date_range),
-                                    Text(df.format(DateTime.parse(
-                                        widget.user.regdate.toString())))
-                                  ]),
+                                  // TableRow(children: [
+                                  //   const Icon(Icons.date_range),
+                                  //   Text(df.format(DateTime.parse(
+                                  //       widget.user.regdate.toString())))
+                                  // ]),
                                 ],
                               ),
                             ],
@@ -190,20 +190,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             MaterialButton(
                               onPressed: _registerAccountDialog,
                               child: const Text("NEW REGISTRATION"),
-                            ),
-                            const Divider(
-                              height: 2,
-                            ),
-                            MaterialButton(
-                              onPressed: _loginDialog,
-                              child: const Text("LOGIN"),
-                            ),
-                            const Divider(
-                              height: 2,
-                            ),
-                            MaterialButton(
-                              onPressed: isDisable ? null : buyCreditPage,
-                              child: const Text("BUY CREDIT"),
                             ),
                             const Divider(
                               height: 2,
@@ -493,7 +479,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           "userid": widget.user.id,
           "newname": newname,
         }).then((response) {
-      print(response.body);
       var jsondata = jsonDecode(response.body);
       if (response.statusCode == 200 && jsondata['status'] == 'success') {
         Fluttertoast.showToast(

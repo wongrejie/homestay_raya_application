@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:homestay_raya_application/models/homestay.dart';
 import 'package:intl/intl.dart';
 
@@ -204,7 +204,6 @@ class _MainScreenState extends State<MainScreen> {
         title: null,
       );
       progressDialog.show();
-      print(response.body);
       // wait for response from the request
       if (response.statusCode == 200) {
         //if statuscode OK
